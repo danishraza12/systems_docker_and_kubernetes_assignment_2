@@ -2,6 +2,11 @@
 const express = require("express");
 const morgan = require("morgan");
 const axios = require("axios");
+const amqp = require('amqplib');
+
+const { sendMsg } = require("../lib/rmq");
+
+const SHIPPING_QUEUE_NAME = "shipping";
 
 // init express app
 const app = express();
@@ -20,12 +25,9 @@ app.get("/shipping", (req, res) => {
 });
 
 app.post("/shipping", async (req, res) => {
-  console.log(req.body);
+  sendMsg(SHIPPING_QUEUE_NAME, req.body.billId);
 
-  const billingResponse = await axios.post("http://localhost:5007/billing");
-  console.log("billingResponse: ", billingResponse);
-
-  res.send(billingResponse);
+  res.send(req.body.billId);
 });
 
 app.put("/shipping", (req, res) => {
@@ -35,5 +37,7 @@ app.put("/shipping", (req, res) => {
 app.delete("/shipping", (req, res) => {
   res.send("DELETE SHIPPING");
 });
+
+receiveMsg(ORDERS_QUEUE_NAME);
 
 app.listen(5009);

@@ -2,6 +2,10 @@
 const express = require("express");
 const morgan = require("morgan");
 
+const { sendMsg } = require("../lib/rmq");
+
+const BILLING_QUEUE_NAME = "billing";
+
 // init express app
 const app = express();
 
@@ -19,7 +23,8 @@ app.get("/billing", (req, res) => {
 });
 
 app.post("/billing", (req, res) => {
-  console.log("POST /billing request: ", req.body);
+  sendMsg(BILLING_QUEUE_NAME, req.body.billId);
+
   res.send(req.body);
 });
 

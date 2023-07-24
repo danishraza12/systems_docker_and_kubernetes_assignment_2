@@ -2,6 +2,10 @@
 const express = require("express");
 const morgan = require("morgan");
 
+const { sendMsg } = require("../lib/rmq");
+
+const USER_QUEUE_NAME = "user";
+
 // init express app
 const app = express();
 
@@ -19,6 +23,8 @@ app.get("/users", (req, res) => {
 });
 
 app.post("/users", (req, res) => {
+  sendMsg(USER_QUEUE_NAME, req.body.userId);
+
   res.send("POST USERS");
 });
 
