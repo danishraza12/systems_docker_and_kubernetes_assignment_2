@@ -1,0 +1,45 @@
+version: '3'
+services:
+  inventory:
+    container_name: inventory-service
+    build: ./inventory-service # docker compose will use this path to get this container's Dockerfile
+    entrypoint: nodemon server.js
+    volumes:
+      - ./inventory-service:/app
+    restart: on-failure:3
+    ports:
+      - 5002:8080
+    command: npm start # This command has higher precedence over the CMD in Dockerfile of service
+
+  shipping:
+    container_name: shipping-service
+    build: ./shipping-service
+    entrypoint: nodemon server.js
+    volumes:
+      - ./sipping-service:/app
+    restart: on-failure:3
+    ports:
+      - 5009:8080
+    command: npm start
+    
+  users:
+    container_name: users-service
+    build: ./users-service
+    entrypoint: nodemon server.js
+    volumes:
+      - ./users-service:/app
+    restart: on-failure:3
+    ports:
+      - 5001:8080
+    command: npm start
+
+  billing:
+    container_name: billing-service
+    build: ./shipping-service
+    entrypoint: nodemon server.js
+    volumes:
+      - ./billing-service:/app
+    restart: on-failure:3
+    ports:
+      - 5007:8080
+    command: npm start

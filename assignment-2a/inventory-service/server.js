@@ -1,9 +1,6 @@
 // imports
 const express = require("express");
 const morgan = require("morgan");
-const { sendMsg } = require("../data-service/message-queue");
-
-const WEBHOOK_QUEUE_NAME = "webhook";
 
 // init express app
 const app = express();
@@ -22,8 +19,6 @@ app.get("/inventory", (req, res) => {
 });
 
 app.post("/inventory", (req, res) => {
-  sendMsg(WEBHOOK_QUEUE_NAME, req.body.productId);
-
   res.send("POST INVENTORY");
 });
 
@@ -35,4 +30,4 @@ app.delete("/inventory", (req, res) => {
   res.send("DELETE INVENTORY");
 });
 
-app.listen(5001);
+app.listen(5002);
