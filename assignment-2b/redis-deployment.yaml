@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchlabels:
+      app: nginx
+template:
+  metadata:
+    labels:
+      app: nginx
+  spec:
+    containers:
+      - name: redis
+        image: redis:latest
+        command:
+          - redis-server
+          - "/redis-master/redis.conf"
+        ports:
+        - containerPort: 6379
