@@ -15,10 +15,10 @@ template:
       app: nginx
   spec:
     containers:
-      - name: redis
-        image: redis:latest
-        command:
-          - redis-server
-          - "/redis-master/redis.conf"
-        ports:
-        - containerPort: 6379
+    - name: redis
+      image: redis:latest
+      command:
+        - redis-server
+        - "/redis-master/redis.conf"
+      ports:
+      - containerPort: 6379
