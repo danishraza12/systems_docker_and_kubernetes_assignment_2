@@ -21,4 +21,4 @@ template:
         - redis-server
         - "/redis-master/redis.conf"
       ports:
-      - containerPort: 6379
+      - containerPort: 2917
