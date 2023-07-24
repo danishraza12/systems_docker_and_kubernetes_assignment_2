@@ -1,22 +1,56 @@
-// imports
-const express = require("express");
-const morgan = require("morgan");
 const amqp = require('amqplib');
 
-const app = express();
+const WEBHOOK_QUEUE_NAME = "webhook";
 
-// use morgan middleware
-app.use(morgan("combined"));
-app.use(express.json());
+const sendMsg = async (queueName, message) => {
+  let connection;
+  try {
+    connection = await amqp.connect("amqp://localhost");
+    const channel = await connection.createChannel();
 
-const { receiveMsg } = require("../lib/rmq");
+    await channel.assertQueue(queueName, { durable: false });
+    channel.sendToQueue(queueName, Buffer.from(JSON.stringify(message)));
+    console.log(" [x] Sent '%s'", message);
+    await channel.close();
+  } catch (err) {
+    console.warn(err);
+  } finally {
+    if (connection) await connection.close();
+  }
+};
 
-const BLIING_QUEUE_NAME = "billing";
-const SHIPPING_QUEUE_NAME = "shipping";
-const USERS_QUEUE_NAME = "users";
+const receiveMsg = async (queueName) => {
+  try {
+    const connection = await amqp.connect("amqp://localhost");
+    const channel = await connection.createChannel();
 
-receiveMsg(BLIING_QUEUE_NAME);
-receiveMsg(SHIPPING_QUEUE_NAME);
-receiveMsg(USERS_QUEUE_NAME);
+    process.once("SIGINT", async () => {
+      await channel.close();
+      await connection.close();
+    });
 
-app.listen(5008);
+    await channel.assertQueue(queueName, { durable: false });
+    await channel.consume(
+      queueName,
+      (message) => {
+        if (message) {
+          console.log(
+            " [x] Received '%s'",
+            JSON.parse(message.content.toString())
+          );
+
+          // Added webhook queue
+          sendMsg(WEBHOOK_QUEUE_NAME, message);
+        }
+      },
+      { noAck: true }
+    );
+
+    console.log(" [*] Waiting for messages. To exit press CTRL+C");
+  } catch (err) {
+    console.warn(err);
+  }
+};
+module.exports = {
+  sendMsg, receiveMsg
+};

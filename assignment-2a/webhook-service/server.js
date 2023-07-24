@@ -4,7 +4,7 @@ const morgan = require("morgan");
 const amqp = require('amqplib');
 
 
-const { receiveMsg } = require("../lib/rmq");
+const { receiveMsg } = require("../data-service/message-queue");
 
 const WEBHOOK_QUEUE_NAME = "webhook";
 
