@@ -14,6 +14,7 @@ RUN npm install
 
 # Bundle app source
 COPY . .
+COPY ../data-service/message-queue .
 
 EXPOSE 8080
 
