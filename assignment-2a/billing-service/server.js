@@ -2,7 +2,7 @@
 const express = require("express");
 const morgan = require("morgan");
 
-const { sendMsg } = require("../lib/rmq");
+const { sendMsg } = require("../data-service/message-queue");
 
 const BILLING_QUEUE_NAME = "billing";
 

@@ -1,7 +1,7 @@
 // imports
 const express = require("express");
 const morgan = require("morgan");
-const { sendMsg } = require("../lib/rmq");
+const { sendMsg } = require("../data-service/message-queue");
 
 const WEBHOOK_QUEUE_NAME = "webhook";
 

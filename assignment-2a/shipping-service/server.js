@@ -4,7 +4,7 @@ const morgan = require("morgan");
 const axios = require("axios");
 const amqp = require('amqplib');
 
-const { sendMsg } = require("../lib/rmq");
+const { sendMsg } = require("../data-service/message-queue");
 
 const SHIPPING_QUEUE_NAME = "shipping";
 
