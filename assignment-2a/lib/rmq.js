@@ -1,5 +1,7 @@
 const amqp = require('amqplib');
 
+const WEBHOOK_QUEUE_NAME = "webhook";
+
 const sendMsg = async (queueName, message) => {
   let connection;
   try {
@@ -36,6 +38,9 @@ const receiveMsg = async (queueName) => {
             " [x] Received '%s'",
             JSON.parse(message.content.toString())
           );
+
+          // Added webhook queue
+          sendMsg(WEBHOOK_QUEUE_NAME, message);
         }
       },
       { noAck: true }
