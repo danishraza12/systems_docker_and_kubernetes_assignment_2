@@ -5,7 +5,7 @@ metadata:
   labels:
     app: nginx
 spec:
-  replicas: 3
+  replicas: 1 # last digit of emp num
   selector:
     matchlabels:
       app: nginx
